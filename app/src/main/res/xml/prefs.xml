@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:entries="@array/mylang_entries"
+        android:entryValues="@array/mylang_entry_values"
+        android:key="@string/pref_mylang_key"
+        android:summary="@string/myLang_summary"
+        android:title="@string/myLang_title">
+    </ListPreference>
+    <ListPreference
+        android:entries="@array/foreign_lang_entries"
+        android:entryValues="@array/foreign_lang_entry_values"
+        android:key="@string/pref_foreignlang_key"
+        android:summary="@string/foreignLang_summary"
+        android:title="@string/foreignLang_title">
+    </ListPreference>
+</PreferenceScreen>
