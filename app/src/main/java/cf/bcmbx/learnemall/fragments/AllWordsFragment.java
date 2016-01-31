@@ -19,23 +19,28 @@ public class AllWordsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.all_words_fragment, container, false);
+        View v = null;
+        if (new WordsManager(getActivity().getApplicationContext()).getAllWords().size() == 0) {
+            v = inflater.inflate(R.layout.empty_db, container, false);
+        } else {
+            v = inflater.inflate(R.layout.all_words_fragment, container, false);
+            RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.list_words_container);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+            mAdapter = new WordsAdapter(new WordsManager(getActivity().getApplicationContext()).getAllWords(), false, getActivity().getApplicationContext());
+            mRecyclerView.setAdapter(mAdapter);
 
-        RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.list_words_container);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        mAdapter = new WordsAdapter(new WordsManager(getActivity().getApplicationContext()).getAllWords(), false, getActivity());
-        mRecyclerView.setAdapter(mAdapter);
-
-        ItemTouchHelper.Callback callback = new WordTouchHelper(mAdapter, getActivity().getApplicationContext(), false);
-        ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(mRecyclerView);
-
+            ItemTouchHelper.Callback callback = new WordTouchHelper(mAdapter, getActivity().getApplicationContext(), false);
+            ItemTouchHelper helper = new ItemTouchHelper(callback);
+            helper.attachToRecyclerView(mRecyclerView);
+        }
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

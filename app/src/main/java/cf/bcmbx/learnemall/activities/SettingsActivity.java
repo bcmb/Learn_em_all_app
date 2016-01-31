@@ -29,6 +29,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         addPreferencesFromResource(R.xml.prefs);
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_mylang_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_foreignlang_key)));
+
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {

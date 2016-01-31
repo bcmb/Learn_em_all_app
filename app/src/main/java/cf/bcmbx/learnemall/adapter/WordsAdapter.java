@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cf.bcmbx.learnemall.R;
@@ -18,10 +19,12 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.WordsViewHol
     private List<Word> mWordsList;
     private boolean mIfLearnMode;
     private Context mContext;
+    private List<Word> mTranslationsOnlyList = new ArrayList<>();
     private WordsManager wordsManager;
 
-    public WordsAdapter (List words, boolean mIfLearnMode, Context mContext) {
+    public WordsAdapter(List words, boolean mIfLearnMode, Context mContext) {
         mWordsList = words;
+        mTranslationsOnlyList.addAll(words);
         this.mIfLearnMode = mIfLearnMode;
         this.mContext = mContext;
         wordsManager = new WordsManager(mContext);
@@ -56,7 +59,7 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.WordsViewHol
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, wordsManager.getWord(mWordsList.get(position).getWord()).getTranslation(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mTranslationsOnlyList.get(position).getTranslation(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -73,6 +76,9 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.WordsViewHol
     public void remove(int position) {
         mWordsList.remove(position);
         notifyItemRemoved(position);
+        if (mWordsList.size() == 0) {
+
+        }
     }
 
     public void markAsLearnt(int position) {

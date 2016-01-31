@@ -2,8 +2,10 @@ package cf.bcmbx.learnemall.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -28,15 +30,15 @@ public class MainActivity extends ActionBarActivity {
 
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
-    private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String[] mDrawerArray;
+    private SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 
@@ -46,16 +48,25 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        LearnFragment myFragment = new LearnFragment();
-        fragmentTransaction.add(R.id.main_frame, myFragment);
-        fragmentTransaction.commit();
+        prefs = getSharedPreferences("cf.bcmbx.learnemall", MODE_PRIVATE);
+        if (prefs.getBoolean("firstrun", true)) {
+            loadInitialFragment(true);
+            prefs.edit().putBoolean("firstrun", false).commit();
+            PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
+        } else {
+            loadInitialFragment(false);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     private void addDrawerItems() {
         mDrawerArray  = getResources().getStringArray(R.array.navDrawer);
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mDrawerArray);
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mDrawerArray);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -131,6 +142,7 @@ public class MainActivity extends ActionBarActivity {
             case 0:
                 fragmentClass = LearnFragment.class;
                 getSupportActionBar().setTitle(mDrawerArray[0]);
+                //mDrawerList.mDrawerLayout.getItem(0).setChecked(true);
                 break;
             case 1:
                 fragmentClass = AllWordsFragment.class;
@@ -155,5 +167,19 @@ public class MainActivity extends ActionBarActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
         mDrawerLayout.closeDrawers();
+    }
+
+    private void loadInitialFragment(boolean ifFirstLaunch) {
+        Fragment myFragment = null;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (ifFirstLaunch) {
+            myFragment = new AboutFragment();
+            getSupportActionBar().setTitle(mDrawerArray[3]);
+        } else {
+            myFragment = new LearnFragment();
+        }
+        fragmentTransaction.add(R.id.main_frame, myFragment);
+        fragmentTransaction.commit();
     }
 }

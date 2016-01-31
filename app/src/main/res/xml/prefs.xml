@@ -6,6 +6,7 @@
         android:entryValues="@array/mylang_entry_values"
         android:key="@string/pref_mylang_key"
         android:summary="@string/myLang_summary"
+        android:defaultValue="ru"
         android:title="@string/myLang_title">
     </ListPreference>
     <ListPreference
@@ -13,6 +14,7 @@
         android:entryValues="@array/foreign_lang_entry_values"
         android:key="@string/pref_foreignlang_key"
         android:summary="@string/foreignLang_summary"
+        android:defaultValue="en"
         android:title="@string/foreignLang_title">
     </ListPreference>
 </PreferenceScreen>
